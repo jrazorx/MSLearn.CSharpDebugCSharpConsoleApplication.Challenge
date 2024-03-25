@@ -115,6 +115,10 @@ static void LoadTillEachMorning(int[,] registerDailyStartingCash, int[] cashTill
 
 static void MakeChange(int cost, int[] cashTill, int twenties, int tens = 0, int fives = 0, int ones = 0)
 {
+    // Backup cashTill in case of errors
+    int[] cashTillBefore = new int[cashTill.Length];
+    Array.Copy(cashTill, cashTillBefore, cashTill.Length);
+
     int amountPaid = twenties * 20 + tens * 10 + fives * 5 + ones;
     int changeNeeded = amountPaid - cost;
 
@@ -157,7 +161,11 @@ static void MakeChange(int cost, int[] cashTill, int twenties, int tens = 0, int
     }
 
     if (changeNeeded > 0)
+    {
+        // cashTill back to previous state before this transaction
+        Array.Copy(cashTillBefore, cashTill, cashTill.Length);
         throw new InvalidOperationException("InvalidOperationException: The till is unable to make change for the cash provided.");
+    }
 
 }
 
